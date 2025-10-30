@@ -39,6 +39,8 @@ function UserInputs() {
     userSkills:[],
     summary:""
   })
+  //reference to skill input tag
+  const skillRef = React.useRef()
 
   console.log(resumeDetails);
   
@@ -84,6 +86,20 @@ function UserInputs() {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const addSkill = (skill)=>{
+    if (resumeDetails.userSkills.includes(skill)) {
+      alert("The given skill already added, Please add another!!!")
+    }else{
+      setResumeDetails({...resumeDetails,userSkills:[...resumeDetails.userSkills,skill]})
+      //to clear add skill text box
+      skillRef.current.value =""
+    }
+  }
+
+  const removeSkill = (skill)=>{
+    setResumeDetails({...resumeDetails,userSkills:resumeDetails.userSkills.filter(item=>item!=skill)})
+  }
 
   const renderSteps = (stepCount)=>{
     switch(stepCount){
@@ -135,21 +151,27 @@ function UserInputs() {
             <div>
                 <h3>Skills</h3>
                 <div className='d-flex align-items-center justify-content-between p-3 w-100'>
-                <input type="text" placeholder='Add Skill' className="form-control" />
-                <Button variant='text'>ADD</Button>
+                <input ref={skillRef} type="text" placeholder='Add Skill' className="form-control" />
+                <Button onClick={()=>addSkill(skillRef.current.value)} variant='text'>ADD</Button>
                 </div>
                 <h5>Suggestions</h5>
                 <div className='d-flex flex-wrap justify-content-between my-3'>
                   {
                     skillSuggestionArray.map((item,index)=>(
-                      <Button key={index} variant='outlined' className='m-2'>{item}</Button>
+                      <Button onClick={()=>addSkill(item)} key={index} variant='outlined' className='m-2'>{item}</Button>
                     ))
                   }
                 </div>
-                  <h5>Added Skills</h5>
+                  <h5>Added Skills :</h5>
                    <div className='d-flex flex-wrap justify-content-between my-3'>
-                 <Button variant="contained" className='m-1'>NODE JS <FaXmark className='ms-2' /> </Button>
-
+                    {
+                      resumeDetails.userSkills?.length>0?
+                      resumeDetails.userSkills?.map((skill,index)=>(
+                         <Button key={index} variant="contained" className='m-1'>{skill} <FaXmark onClick={()=>removeSkill(skill)} className='ms-2' /> </Button>
+                      ))
+                      :
+                      <p className='fw-bolder'>No Skills are added yet!!!</p>
+                      }
                 </div>
             </div>
         )
