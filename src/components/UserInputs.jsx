@@ -8,41 +8,22 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { FaXmark } from "react-icons/fa6";
-import { resumeAndPrerender } from 'react-dom/static';
 
 
 const steps = ['Basic Informations', 'Contact Details', 'Education Details', 'Work Experience', 'Skills & Certifications', 'Review & Submit'];
 
-function UserInputs() {
+function UserInputs({resumeDetails,setResumeDetails}) {
+
+   console.log(resumeDetails);
+
   const skillSuggestionArray = ['NODE JS', 'MONGODB', 'EXPRESS JS', 'REACT', 'ANGULAR', 'NEXT JS','HTML', 'CSS', 'JAVASCRIPT', 'LEADERSHIP', 'COMMUNICATION', 'MS EXCEL', 'POWERBI']
  const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
-  //create state for storing resume details.
-  const [resumeDetails,setResumeDetails] = React.useState({
-    username:"",
-    jobTitle:"",
-    location:"",
-    email:"",
-    mobile:"",
-    github:"",
-    linkedin:"",
-    portfolio:"",
-    course:"",
-    college:"",
-    university:"",
-    passoutYear:"",
-    jobType:"",
-    company:"",
-    clocation:"",
-    duration:"",
-    userSkills:[],
-    summary:""
-  })
   //reference to skill input tag
   const skillRef = React.useRef()
 
-  console.log(resumeDetails);
+ 
   
 
   const isStepOptional = (step) => {
@@ -179,11 +160,23 @@ function UserInputs() {
             <div>
                 <h3>Summary</h3>
                 <div className='p-3 row'>
-                   <TextField id="standard-basic-summary" label="Write a short summary of yourself" variant="standard" multiline rows={7} defaultValue={'MERN Stack Developer with hands-on experience in building dynamic and responsive web applications using MongoDB, Express.js, React.js, and Node.js. Skilled in developing RESTful APIs, managing database operations, and creating interactive front-end interfaces. Strong understanding of component-based architecture, state management, and backend integration. Capable of deploying full-stack applications and working with modern development tools and version control systems like Git and GitHub.'} />
+                   <TextField onChange={e=>setResumeDetails({...resumeDetails,summary:e.target.value})} id="standard-basic-summary" label="Write a short summary of yourself" variant="standard" multiline rows={7} defaultValue={'MERN Stack Developer with hands-on experience in building dynamic and responsive web applications using MongoDB, Express.js, React.js, and Node.js. Skilled in developing RESTful APIs, managing database operations, and creating interactive front-end interfaces. Strong understanding of component-based architecture, state management, and backend integration. Capable of deploying full-stack applications and working with modern development tools and version control systems like Git and GitHub.'} />
                 </div>
             </div>
         )
         default : return null
+    }
+  }
+
+  const handleAddResume =async()=>{
+    const {username,jobTitle,location} = resumeDetails
+    if(!username && !jobTitle && !location){
+      alert("Please fill the form completely...")
+    }else{
+      //api
+      console.log("Api Call");
+      
+      //success redirect view page
     }
   }
 
@@ -241,9 +234,13 @@ function UserInputs() {
                 Skip
               </Button>
             )}
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button>
+            {activeStep === steps.length - 1 ? 
+            <Button onClick={handleAddResume}>Finish</Button>
+             : 
+             <Button onClick={handleNext}>Next</Button>
+             }
+            
+            
           </Box>
         </React.Fragment>
       )}
