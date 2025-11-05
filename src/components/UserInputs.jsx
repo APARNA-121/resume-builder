@@ -8,22 +8,24 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { FaXmark } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
+import { addResumeAPI } from '../services/allAPI';
 
 
 const steps = ['Basic Informations', 'Contact Details', 'Education Details', 'Work Experience', 'Skills & Certifications', 'Review & Submit'];
 
 function UserInputs({resumeDetails,setResumeDetails}) {
 
-   console.log(resumeDetails);
-
   const skillSuggestionArray = ['NODE JS', 'MONGODB', 'EXPRESS JS', 'REACT', 'ANGULAR', 'NEXT JS','HTML', 'CSS', 'JAVASCRIPT', 'LEADERSHIP', 'COMMUNICATION', 'MS EXCEL', 'POWERBI']
- const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
   //reference to skill input tag
   const skillRef = React.useRef()
-
+  //to navigate
+  const navigate = useNavigate()
  
+  console.log(resumeDetails);
   
 
   const isStepOptional = (step) => {
@@ -175,8 +177,18 @@ function UserInputs({resumeDetails,setResumeDetails}) {
     }else{
       //api
       console.log("Api Call");
-      
-      //success redirect view page
+      try{
+        const result = await addResumeAPI(resumeDetails)
+        console.log(result);
+        if(result.status==201){
+          alert("Resume added successfully!!!")
+          const {id} = result.data
+           //success redirect view page
+           navigate(`/resume/${id}/view`)
+        }
+      }catch(error){
+        console.log(error); 
+      }
     }
   }
 

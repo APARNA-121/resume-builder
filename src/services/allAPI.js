@@ -6,3 +6,11 @@ export const addResumeAPI = async (resume)=>{
     return await commonAPI(`${ServerURL}/resumes`, "POST", resume)
 }
 
+//get resume api - called from ViewResume, when page load(), inside useEffect hook
+export const getResumeAPI = async (id)=>{
+    return await commonAPI(`${ServerURL}/resumes/${id}`, "GET", {})
+}
+//update resume api
+//add history api
+//get history api
+//remove history api
